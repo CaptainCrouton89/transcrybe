@@ -191,6 +191,7 @@ class TranscribeApp(rumps.App):
                 
                 # Method 1: pynput
                 try:
+                    print(f"Attempting pynput paste for: {text[:50]}...")
                     kb = keyboard.Controller()
                     time.sleep(0.1)
                     with kb.pressed(Key.cmd):
@@ -198,6 +199,7 @@ class TranscribeApp(rumps.App):
                         kb.release('v')
                     time.sleep(0.1)  # Give it time to paste
                     pasted = True
+                    print("pynput paste succeeded")
                     rumps.notification("Transcrybe", "Success!", f"Pasted: {text}")
                 except Exception as e:
                     print(f"pynput paste failed: {e}")
@@ -205,11 +207,13 @@ class TranscribeApp(rumps.App):
                 # Method 2: Try with longer delay
                 if not pasted:
                     try:
+                        print("Attempting second paste method...")
                         time.sleep(0.5)
                         kb = keyboard.Controller()
                         kb.tap(Key.cmd, modifier=Key.cmd)  # Different approach
                         kb.tap('v')
                         pasted = True
+                        print("Second paste method succeeded")
                         rumps.notification("Transcrybe", "Success!", f"Pasted: {text}")
                     except Exception as e:
                         print(f"Second paste method failed: {e}")
@@ -217,6 +221,7 @@ class TranscribeApp(rumps.App):
                 # Method 3: Direct keystroke
                 if not pasted:
                     try:
+                        print("Attempting Quartz paste method...")
                         import Quartz
                         # Create key down event for Cmd+V
                         cmd_down = Quartz.CGEventCreateKeyboardEvent(None, 55, True)  # Cmd key
@@ -235,11 +240,13 @@ class TranscribeApp(rumps.App):
                         Quartz.CGEventPost(Quartz.kCGHIDEventTap, cmd_up)
                         
                         pasted = True
+                        print("Quartz paste succeeded")
                         rumps.notification("Transcrybe", "Success!", f"Pasted: {text}")
                     except Exception as e:
                         print(f"Quartz paste failed: {e}")
                 
                 if not pasted:
+                    print("All paste methods failed - text copied to clipboard")
                     rumps.notification("Transcrybe", "Copied to Clipboard", f"Press Cmd+V to paste: {text}")
             else:
                 rumps.notification("Transcrybe", "No Speech", "No speech detected")
