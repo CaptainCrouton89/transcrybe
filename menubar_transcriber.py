@@ -3,22 +3,24 @@
 Menu bar speech-to-text transcriber that works system-wide
 """
 
-import rumps
-import whisper
-import sounddevice as sd
-import numpy as np
-import threading
-import tempfile
+import logging
 import os
-import pyperclip
 import subprocess
+import sys
+import tempfile
+import threading
 import time
+from datetime import datetime
+
+import numpy as np
+import pyperclip
+import rumps
 import scipy.io.wavfile as wavfile
+import sounddevice as sd
+import whisper
 from pynput import keyboard
 from pynput.keyboard import Key
-import logging
-import sys
-from datetime import datetime
+
 
 def setup_logging():
     """Setup logging to write to user's home directory"""
@@ -266,6 +268,7 @@ class TranscribeApp(rumps.App):
                     try:
                         logging.info("Attempting Quartz paste method...")
                         import Quartz
+
                         # Create key down event for Cmd+V
                         cmd_down = Quartz.CGEventCreateKeyboardEvent(None, 55, True)  # Cmd key
                         v_down = Quartz.CGEventCreateKeyboardEvent(None, 9, True)   # V key
