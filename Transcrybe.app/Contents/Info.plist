@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>Transcrybe</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.transcrybe.app</string>
+    <key>CFBundleName</key>
+    <string>Transcrybe</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Transcrybe needs microphone access to record speech for transcription.</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Transcrybe needs to simulate keystrokes to paste transcribed text.</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15</string>
+    <key>CFBundleDocumentTypes</key>
+    <array/>
+</dict>
+</plist>

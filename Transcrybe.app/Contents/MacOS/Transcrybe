@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Get the directory where the app bundle is located
+APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# The script is in the parent directory of the app bundle
+SCRIPT_DIR="$(cd "$APP_DIR/.." && pwd)"
+
+# Change to the script directory
+cd "$SCRIPT_DIR"
+
+# Run the Python script
+exec python3 "$SCRIPT_DIR/menubar_transcriber.py"
