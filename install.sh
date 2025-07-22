@@ -1,51 +1,41 @@
 #!/bin/bash
+# Transcrybe Installer
+
+set -e
+
+APP_NAME="Transcrybe.app"
+INSTALL_DIR="/Applications"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Installing Transcrybe..."
 
-# Copy app to Applications
-echo "Copying app to /Applications..."
-if [ -d "/Applications/Transcrybe.app" ]; then
-    echo "Removing existing installation..."
-    rm -rf "/Applications/Transcrybe.app"
+# Check if app bundle exists
+if [ ! -d "$CURRENT_DIR/$APP_NAME" ]; then
+    echo "Error: $APP_NAME not found in current directory"
+    exit 1
 fi
-cp -R "Transcrybe.app" "/Applications/"
 
-# Copy Python script to app bundle
-echo "Copying Python script..."
-cp "menubar_transcriber.py" "/Applications/Transcrybe.app/Contents/Resources/"
+# Remove existing installation
+if [ -d "$INSTALL_DIR/$APP_NAME" ]; then
+    echo "Removing existing installation..."
+    rm -rf "$INSTALL_DIR/$APP_NAME"
+fi
 
-# Update the launch script to use the correct path
-cat > "/Applications/Transcrybe.app/Contents/MacOS/Transcrybe" << 'EOF'
-#!/bin/bash
+# Copy app to Applications
+echo "Copying $APP_NAME to $INSTALL_DIR..."
+cp -R "$CURRENT_DIR/$APP_NAME" "$INSTALL_DIR/"
 
-# Get the directory where the app bundle is located
-APP_DIR="/Applications/Transcrybe.app/Contents/Resources"
-
-# Change to the app directory
-cd "$APP_DIR"
-
-# Run the Python script
-exec python3 "$APP_DIR/menubar_transcriber.py"
-EOF
-
-chmod +x "/Applications/Transcrybe.app/Contents/MacOS/Transcrybe"
-
-# Install LaunchAgent for auto-start
-echo "Setting up auto-start..."
-mkdir -p "$HOME/Library/LaunchAgents"
-cp "com.transcrybe.app.plist" "$HOME/Library/LaunchAgents/"
-
-# Load the LaunchAgent
-launchctl unload "$HOME/Library/LaunchAgents/com.transcrybe.app.plist" 2>/dev/null
-launchctl load "$HOME/Library/LaunchAgents/com.transcrybe.app.plist"
+# Set correct permissions
+chmod +x "$INSTALL_DIR/$APP_NAME/Contents/MacOS/Transcrybe"
 
 echo "Installation complete!"
 echo ""
-echo "Transcrybe has been installed and will start automatically on login."
-echo "You can start it now by running:"
-echo "  open /Applications/Transcrybe.app"
+echo "Transcrybe has been installed to $INSTALL_DIR/$APP_NAME"
 echo ""
-echo "To uninstall later:"
-echo "  launchctl unload ~/Library/LaunchAgents/com.transcrybe.app.plist"
-echo "  rm ~/Library/LaunchAgents/com.transcrybe.app.plist"
-echo "  rm -rf /Applications/Transcrybe.app"
+echo "To launch Transcrybe:"
+echo "1. Open Applications folder"
+echo "2. Double-click Transcrybe"
+echo "3. Grant required permissions when prompted"
+echo "4. Use Cmd+Shift+Space to start transcription"
+echo ""
+echo "Note: Python 3 is required. Install from python.org if not already installed."

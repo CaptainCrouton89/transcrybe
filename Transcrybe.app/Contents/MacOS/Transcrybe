@@ -1,12 +1,51 @@
 #!/bin/bash
+# Transcrybe app launcher
 
-# Get the directory where the app bundle is located
-APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-# The script is in the parent directory of the app bundle
-SCRIPT_DIR="$(cd "$APP_DIR/.." && pwd)"
+# Get the directory containing this script (MacOS directory)
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Go up one level to Contents directory  
+CONTENTS_DIR="$(dirname "$SCRIPT_DIR")"
+RESOURCES_DIR="$CONTENTS_DIR/Resources"
 
-# Change to the script directory
-cd "$SCRIPT_DIR"
+# Find Python executable
+find_python() {
+    for python_cmd in python3 /usr/bin/python3 /usr/local/bin/python3 /opt/homebrew/bin/python3; do
+        if command -v "$python_cmd" &> /dev/null; then
+            echo "$python_cmd"
+            return 0
+        fi
+    done
+    
+    osascript -e "display dialog \"Python 3 is required but not found. Please install Python 3 from python.org and try again.\" with title \"Transcrybe - Missing Python\" buttons {\"OK\"} default button \"OK\""
+    exit 1
+}
 
-# Run the Python script
-exec python3 "$SCRIPT_DIR/menubar_transcriber.py"
+# Install requirements if needed
+install_requirements() {
+    local python_cmd="$1"
+    local requirements_file="$RESOURCES_DIR/requirements.txt"
+    
+    if [ -f "$requirements_file" ]; then
+        echo "Installing Python dependencies..."
+        "$python_cmd" -m pip install --user -q -r "$requirements_file" 2>/dev/null || {
+            osascript -e "display dialog \"Failed to install required Python packages. Please ensure pip is installed and try again.\" with title \"Transcrybe - Installation Error\" buttons {\"OK\"} default button \"OK\""
+            exit 1
+        }
+    fi
+}
+
+# Check for menubar_transcriber.py in Resources
+PYTHON_SCRIPT="$RESOURCES_DIR/menubar_transcriber.py"
+if [ ! -f "$PYTHON_SCRIPT" ]; then
+    osascript -e "display dialog \"Application files are missing or corrupted. Please reinstall Transcrybe.\" with title \"Transcrybe - Error\" buttons {\"OK\"} default button \"OK\""
+    exit 1
+fi
+
+# Find and launch with Python
+PYTHON_CMD=$(find_python)
+
+# Install requirements on first run
+install_requirements "$PYTHON_CMD"
+
+# Launch the application
+exec "$PYTHON_CMD" "$PYTHON_SCRIPT"

@@ -1,17 +1,29 @@
 #!/bin/bash
+# Transcrybe Uninstaller
+
+APP_NAME="Transcrybe.app"
+INSTALL_DIR="/Applications"
 
 echo "Uninstalling Transcrybe..."
 
-# Stop and unload LaunchAgent
-echo "Stopping auto-start service..."
-launchctl unload "$HOME/Library/LaunchAgents/com.transcrybe.app.plist" 2>/dev/null
+# Remove app bundle
+if [ -d "$INSTALL_DIR/$APP_NAME" ]; then
+    echo "Removing $INSTALL_DIR/$APP_NAME..."
+    rm -rf "$INSTALL_DIR/$APP_NAME"
+    echo "Transcrybe has been uninstalled."
+else
+    echo "Transcrybe is not installed in $INSTALL_DIR"
+fi
 
-# Remove LaunchAgent
-echo "Removing auto-start configuration..."
-rm -f "$HOME/Library/LaunchAgents/com.transcrybe.app.plist"
+# Remove logs (optional)
+LOG_DIR="$HOME/Library/Logs/Transcrybe"
+if [ -d "$LOG_DIR" ]; then
+    read -p "Remove log files in $LOG_DIR? (y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -rf "$LOG_DIR"
+        echo "Log files removed."
+    fi
+fi
 
-# Remove app from Applications
-echo "Removing application..."
-rm -rf "/Applications/Transcrybe.app"
-
-echo "Transcrybe has been completely uninstalled."
+echo "Uninstallation complete!"

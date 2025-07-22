@@ -22,9 +22,19 @@
     <string>Transcrybe needs microphone access to record speech for transcription.</string>
     <key>NSAppleEventsUsageDescription</key>
     <string>Transcrybe needs to simulate keystrokes to paste transcribed text.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Transcrybe needs accessibility access to paste transcribed text into any application.</string>
+    <key>NSSystemAdministrationUsageDescription</key>
+    <string>Transcrybe needs input monitoring to detect the global hotkey (Cmd+Shift+Space).</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.15</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
     <key>CFBundleDocumentTypes</key>
     <array/>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.productivity</string>
 </dict>
 </plist>
